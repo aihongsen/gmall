@@ -9,6 +9,8 @@
         <module>gmall-serviceutil</module>
         <module>gmall-webutil</module>
         <module>gmall-parent</module>
+        <module>gmall-sysuser-service</module>
+        <module>gmall-sysuser-web</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

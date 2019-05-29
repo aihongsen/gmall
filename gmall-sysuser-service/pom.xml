@@ -9,11 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gmall-interface</artifactId>
+    <artifactId>gmall-sysuser-service</artifactId>
     <dependencies>
         <dependency>
             <groupId>com.douh.gmall</groupId>
-            <artifactId>gmall-bean</artifactId>
+            <artifactId>gmall-interface</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.douh.gmall</groupId>
+            <artifactId>gmall-serviceutil</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
