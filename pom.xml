@@ -8,6 +8,7 @@
         <module>gmall-interface</module>
         <module>gmall-serviceutil</module>
         <module>gmall-webutil</module>
+        <module>gmall-parent</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
