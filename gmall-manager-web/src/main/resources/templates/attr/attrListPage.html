@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>主界面</title>
+
+</head>
+<body >
+<div class="easyui-panel" title=""  data-options="border:true">
+
+
+    <table id="attrInfoList" class="easyui-datagrid" title="属性名列表"
+           data-options="singleSelect:true,method:'get' ,toolbar:'#tb'">
+        <thead>
+        <tr>
+            <th data-options="field:'id'" width="20%">属性id </th>
+            <th data-options="field:'attrName'" width="40%">平台属性名称</th>
+            <th data-options="field:'catalog3Id'" width="40%">三级分类id</th>
+          </tr>
+        </thead>
+    </table>
+    <div id="tb" style="padding:5px;height:auto">
+        <div style="margin-bottom:5px">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addAttrInfo()">添加</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editAttrInfo()">编辑</a>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="delAttrInfo()">删除</a>
+        </div>
+        <div>
+            一级分类：
+            <select id="ctg1ForAttrList" class="easyui-combobox" style="width:100px"
+                    data-options="valueField:'id',textField:'name',url:'/catalog/1/list.json',onSelect: function(rec){
+             //抓取一级分类被选的部分用rec变量接收
+             //当一级分类被选中，获取二级分类
+             console.log(rec)
+            $('#ctg2ForAttrList').combobox('clear');
+            $('#ctg3ForAttrList').combobox('clear');
+            $('#ctg2ForAttrList').combobox('reload', '/catalog/2/list.json?catalog1_id='+rec.id);
+        }"></select>
+            二级分类：
+            <select name="ctg2ForAttrList" id="ctg2ForAttrList" class="easyui-combobox" style="width:100px" data-options="valueField:'id',textField:'name',onSelect: function(rec){
+            //当二级分类被选中，获取三级分类
+            console.log(rec)
+            $('#ctg3ForAttrList').combobox('clear');
+            $('#ctg3ForAttrList').combobox('reload','/catalog/3/list.json?catalog2_id='+rec.id);
+
+        }"></select>
+            三级分类：
+            <select name="ctg3ForAttrList" id="ctg3ForAttrList" class="easyui-combobox" style="width:100px" data-options="valueField:'id',textField:'name',onSelect: function(rec){console.log(rec)
+            //当三级分类被选中，获取平台属性名到table
+               $('#attrInfoList').datagrid({
+                    url:'/baseAttrInfo.json?catalog3_id='+rec.id,
+                    columns:[[
+                        {field:'id',title:'属性id',width:200},
+                        {field:'attrName',title:'平台属性名称',width:200},
+                        {field:'catalog3Id',title:'三级分类id',width:200,align:'right'}
+                    ]]
+                });
+
+            }"></select>
+               <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="refreshAttrInfo()">刷新属性列表</a>
+        </div>
+    </div>
+</div>
+<div id="bb">
+    <a href="#" class="easyui-linkbutton" onclick="saveAttr()">保存</a>
+    <a href="#" class="easyui-linkbutton" ONCLICK="$('#attrEdit').dialog('close')">关闭</a>
+</div>
+    <!--引入其他页面供2.script使用弹出的页面 jsp:include
+        1> 在th:include 里写视图名是return 的路径 并非requestMapping下的请求地址
+        2> 这个地址不用在controller生成映射的requestMapping 直接写页面的位置
+    -->
+    <!--引入添加界面-->
+    <div th:include="attr/attrEdit"></div>
+</body>
+<script language="javascript">
+    /*<![CDATA[*/
+        //1.刷新属性列表
+        function refreshAttrInfo() {
+            //1.先获取当前选中的三级分类
+            var catalog3Id= $('#ctg3ForAttrList').combobox('getValue');
+            //2.根据三级分类ID重新加载平台属性名
+            $('#dg').datagrid({url:'/baseAttrInfo.json?catalog3_id='+catalog3Id});
+        }
+        //2.1获取当前选中的catalog3信息
+        function getCatalog3Info() {
+            var catalog3id = $('#ctg3ForAttrList').combobox('getValue');
+            if(catalog3id == ""){
+                return null;
+            }
+            var catalog3value = $('#ctg3ForAttrList').combobox('getText');
+            var info = {id:catalog3id,name:catalog3value};
+            return info
+        }
+        //3.1 获取当前选中的AttrInfo 平台属性名信息
+    function getAttrInfo() {
+        var attrInfo = $('#attrInfoList').datagrid('getSelected');
+        return  $('#attrInfoList').datagrid('getSelected');
+    }
+
+        //4.1 点击弹出attrAdd页面 添加attrInfo  需要注意 这个页面给单摘出来了，所以需要使用incloud 先加载页面
+        function addAttrInfo() {
+            //①先判断是否选中三级分类
+            if(getCatalog3Info()!== null){
+                //②选中弹出对话框
+                $('#attrEdit').dialog('open');
+            }else {
+                //②未选中
+                $.messager.alert('警告','请选中将要在哪个三级分类下进行添加');
+            }
+        }
+        
+        //5.2 点击弹出attrEdit页面 编辑attrInfo  需要注意 这个页面给单摘出来了，所以需要使用incloud 先加载页面
+        function editAttrInfo() {
+            //①先判断是否选中三级分类
+            if(getCatalog3Info()== null){
+                //②未选中三级分类
+                $.messager.alert('警告','请选中将要在哪个三级分类下进行编辑');
+            }else {
+                //③判断是否选中平台属性名
+                if(getAttrInfo() ==null){
+                    //未选中要编辑的平台属性名
+                    $.messager.alert('警告','请选中要编辑的平台属性名');
+                }else {
+                    //④回显信息
+                    var attrInfo = getAttrInfo();
+                    /*console.log("选中的平台属性信息" + JSON.stringify(attrInfo));*/
+                    $('#attrInfoName').textbox('setValue',attrInfo.attrName);
+                    $('#attrInfoId').val(attrInfo.id);
+                    $('#attrValueList').datagrid({
+                        url:'/baseAttrValue.json?attr_id='+attrInfo.id,
+                        singleSelect:true,
+                        columns:[[
+                            {field:'id',title:'属性值ID',width:'20%'},
+                            {field:'valueName',title:'属性值',width:'40%'},
+                            {field:'attrId',title:'属性名ID',width:'40%'}
+                        ]],
+                        toolbar: [{
+                            text:'添加',
+                            iconCls: 'icon-add',
+                            handler: function(){alert('add')}
+                        },'-',{
+                            text:'删除',
+                            iconCls: 'icon-edit',
+                            handler: function(){alert('remove')}
+                        }]
+                    });
+                    //⑤弹出对话框
+                    $('#attrEdit').dialog('open');
+                }
+            }
+
+        }
+
+        //6.3 点击弹出attrDel页面 删除attrInfo  需要注意 这个页面给单摘出来了，所以需要使用incloud 先加载页面
+        function delAttrInfo() {
+            //①先判断是否选中三级分类
+            if(getCatalog3Info()!== null){
+                //②选中弹出对话框
+                $('#attrEdit').dialog('open');
+            }else {
+                //②未选中
+                $.messager.alert('警告','请选中将要在哪个三级分类下进行删除');
+            }
+        }
+
+        //7.点击平台属性的弹窗中的关闭按钮
+        function closeAttrValueTool(){
+            $('#attrToolClose').linkbutton()
+        }
+    /*]]>*/
+</script>
+
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台入口页</title>
+    <meta http-equiv="Content-Type"content="text/html；charset=UTF-8">
+    <title>主界面</title>
+    <script type="text/javascript" src="/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/easyui/easyloader.js"></script>
+    <script type="text/javascript" src="/easyui/clickedit.js"></script>
+    <link rel="stylesheet" type="text/css" href="/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css"  href="/easyui/themes/default/easyui.css">
+</head>
+<body id="cc" class="easyui-layout"  style="width:100%;height:100%;">
+    <div data-options="region:'north',title:'北京德欧汇有限公司'" style="height:100px;"></div>
+    <div data-options="region:'south',title:'版权所有@北京德欧汇有限公司'" style="height:100px;"></div>
+   <!-- <div data-options="region:'east',iconCls:'icon-reload',title:'East',split:true" style="width:100px;"></div>-->
+    <div data-options="region:'west',title:'菜单栏'" style="width:250px;">
+        <div id="aa" class="easyui-accordion" style="width:90%;height:100%;">
+            <div title="基本信息管理">
+                <ul><a href="#" onclick="addtab('平台属性管理','/attr/attrListPage.html')">平台属性管理</a></ul>
+                <ul><a href="#" onclick="addtab('系统属性管理','/attr/attrListPage.html')">系统属性管理</a></ul>
+                <ul><a href="#" onclick="addtab('参数属性管理','/attr/attrListPage.html')">参数属性管理</a></ul>
+            </div>
+            <div title="商品信息管理">
+                商品信息管理
+            </div>
+            <div title="广告信息管理">
+                广告信息管理
+            </div>
+        </div>
+    </div>
+    <div data-options="region:'center'" style="padding:5px;background:#eee;">
+        <div id="tt" class="easyui-tabs" style=" width: 100%;height: 100%">
+
+        </div>
+    </div>
+    <script type="text/javascript">
+        /**
+         * 创建标签卡方法
+         * @param title
+         * @param content
+         */
+        function addtab(title,url){
+            //清除属性
+            // 先判断标签卡是否存在
+            if(!$('#tt').tabs('exists',title)){
+                //不存在创建
+                $('#tt').tabs('add',{
+                    title:title,
+                    href:url, //跳转网络请求的地址
+                    closable:true
+                });
+            }else {
+                //存在则选中
+                $('#tt').tabs('select',title);
+
+            }
+
+
+        }
+    </script>
+</body>
+</html>

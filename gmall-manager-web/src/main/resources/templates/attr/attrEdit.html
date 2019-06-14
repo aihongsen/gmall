@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<div id="attrEdit" class="easyui-dialog" title="编辑属性名" style="width:600px;height:500px;"
+     closed="true" data-options="iconCls:'icon-save',resizable:true,modal:true" buttons="#bb" >
+    <form id="attrForm">
+        <br/>
+        <label >属性名称:</label>
+        <input  id="attrInfoName" name="attrName" class="easyui-textbox" data-options="" style="width:100px"/>
+        <input  id="attrInfoId" name="id" type="hidden"  />
+        <br/><br/>
+        <table id="attrValueList" class="easyui-datagrid" style="width:585px;height:350px" title="属性值列表"></table>
+    </form>
+</div>
+
+<div id="bb">
+    <a href="#" class="easyui-linkbutton">保存</a>
+    <a href="#" class="easyui-linkbutton">关闭</a>
+</div>
+
+</body>
+</html>

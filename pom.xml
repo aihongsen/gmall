@@ -11,6 +11,7 @@
         <module>gmall-parent</module>
         <module>gmall-sysuser-service</module>
         <module>gmall-sysuser-web</module>
+        <module>gmall-manager-service</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
